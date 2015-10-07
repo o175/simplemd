@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta charset="UTF-8">
+
+        <title>Просмотр товара</title>
+
+        <style type="text/css">
+            /* все элементы VBox'a с шириной во всю строку */
+            #myView2--idVBox > div {
+                width: 100%;
+            }
+        </style>
+
+        <!-- src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js" -->
+
+        <script
+            id="sap-ui-bootstrap"
+            type="text/javascript"
+            src="https://sapui5.hana.ondemand.com/sdk/resources/sap-ui-core.js"
+            data-sap-ui-theme="sap_bluecrystal"
+            data-sap-ui-libs="sap.m"
+            data-sap-ui-xx-bindingSyntax="complex"
+        >
+        </script>
+
+        <!-- Страница выбора категории -->
+        <script id="view1" type="sapui5/xmlview" >
+            <mvc:View
+                controllerName="local.controller.Master"
+                xmlns="sap.m"
+                xmlns:sap.ui.core="sap.ui.core"
+                xmlns:mvc="sap.ui.core.mvc" >
+                <Page id="page" title="Выбор категории" showFooter="true">
+                    <headerContent>
+                        <Button icon="sap-icon://cart" tooltip="Добавить в корзину" />
+                    </headerContent>
+                    <subHeader>
+                        <Toolbar id="searchBar" >
+                            <content>
+                                <SearchField id="searchField" width="100%" placeholder="Поиск ..." showRefreshButton="true" />
+                            </content>
+                        </Toolbar>
+                    </subHeader>
+                    <content>
+                        <List id="categoryList" headerText="Список категорий" noDataText="Нет данных">
+                            <items>
+                                <StandardListItem type="Active" counter="5" title="Категория 1" press=".pressExample"/>
+                                <StandardListItem type="Active" counter="2" title="Категория 2" press=".pressExample"/>
+                                <StandardListItem type="Active" counter="4" title="Категория 3" press=".pressExample"/>
+                                <StandardListItem type="Active" counter="7" title="Категория 4" press=".pressExample"/>
+                            </items>
+                        </List>
+                    </content>
+                    <footer>
+                        <Toolbar>
+                        </Toolbar>
+                    </footer>
+                </Page>
+            </mvc:View>
+        </script>
+
+        <!-- Детальная страница -->
+        <script id="view2" type="sapui5/xmlview">
+            <mvc:View
+                controllerName="local.controller.Detail"
+                xmlns="sap.m"
+                xmlns:sap.ui.core="sap.ui.core"
+                xmlns:mvc="sap.ui.core.mvc" >
+                <Page id="page" navButtonPress="handleNavButtonPress" title="{Name}" showNavButton="{device>/isPhone}">
+                    <content>
+                        <ObjectHeader title="Laptop Case" number="78.99" numberUnit="EUR" introActive="false" titleActive="false" iconActive="false">
+                            <attributes>
+                                <ObjectAttribute text="Red point stories" active="false" />
+                                <ObjectAttribute text="Laptop Case with many room for pencils and other stationaries" active="false" />
+                                <ObjectAttribute text="789g" active="false" />
+                            </attributes>
+                            <firstStatus>
+                                <ObjectStatus text="Доступен" state="Success" />
+                            </firstStatus>
+                        </ObjectHeader>
+                        <VBox id="idVBox" direction="Column" alignItems="Center">
+                            <items>
+                                <IconTabBar
+                                    expanded="true"
+                                    width="100%"
+                                    id="idIconTabBar"
+                                    class="sapUiResponsiveContentPadding">
+                                    <items>
+                                      <IconTabFilter
+                                        icon="sap-icon://begin"
+                                        iconColor="Positive"
+                                        design="Horizontal"
+                                        count="7 из 14"
+                                        text="Confirm Ok"
+                                        key="Ok" />
+                                      <IconTabSeparator icon="sap-icon://open-command-field" />
+                                      <IconTabFilter
+                                        icon="sap-icon://compare"
+                                        iconColor="Critical"
+                                        design="Horizontal"
+                                        count="5 из 14"
+                                        text="Check Heavys"
+                                        key="Heavy" />
+                                      <IconTabSeparator icon="sap-icon://open-command-field" />
+                                      <IconTabFilter
+                                        icon="sap-icon://inventory"
+                                        iconColor="Negative"
+                                        design="Horizontal"
+                                        count="2 из 14"
+                                        text="Claim Overweights"
+                                        key="Overweight" />
+                                    </items>
+                                    <content>
+                                        <List >
+                                            <headerToolbar>
+                                              <Toolbar>
+                                                <Title text="Продукты" level="H2" />
+                                                <ToolbarSpacer />
+                                                <Button
+                                                  icon="sap-icon://settings"
+                                                  press="handleButtonPress" />
+                                                <Button
+                                                  icon="sap-icon://person-placeholder"
+                                                  press="handleButtonPress" />
+                                                <Button
+                                                  icon="sap-icon://drop-down-list"
+                                                  press="handleButtonPress" />
+                                              </Toolbar>
+                                            </headerToolbar>
+                                            <infoToolbar>
+                                              <Toolbar
+                                                active="true"
+                                                press="handleInfobarPress" >
+                                                <Label text="This is the info bar" />
+                                              </Toolbar>
+                                            </infoToolbar>
+                                            <items>
+                                                <StandardListItem
+                                                    title = "Power Projector 4713"
+                                                    description = "1239102"
+                                                    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-6100.jpg"
+                                                    iconDensityAware="false"
+                                                    iconInset="false" />
+
+                                                <StandardListItem
+                                                    title = "Gladiator MX"
+                                                    description = "2212-121-828"
+                                                    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1071.jpg"
+                                                    iconDensityAware="false"
+                                                    iconInset="false" />
+
+                                                <StandardListItem
+                                                    title = "Hurricane GX"
+                                                    description = "K47322.1"
+                                                    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1072.jpg"
+                                                    iconDensityAware="false"
+                                                    iconInset="false" />
+
+                                                <StandardListItem
+                                                    title = "Webcam"
+                                                    description = "22134T"
+                                                    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1112.jpg"
+                                                    iconDensityAware="false"
+                                                    iconInset="false" />
+                                            </items>
+                                        </List>
+                                    </content>
+                                </IconTabBar>
+                            </items>
+                        </VBox>
+
+                    </content>
+                    <footer>
+                        <Toolbar>
+                            <content>
+                                <ToolbarSpacer />
+                                <Button text="Добавить в корзину" icon="sap-icon://add" />
+                            </content>
+                        </Toolbar>
+                    </footer>
+                </Page>
+            </mvc:View>
+        </script>
+
+        <!-- Подключение страниц -->
+        <script>
+            // Controller definition 4 Master
+            sap.ui.controller("local.controller.Master", {
+                pressExample: function(oEvent) {
+                  alert('Нажат элемент '+oEvent.getSource().getTitle());
+                }
+            });
+
+            // Controller definition 4 Detail
+            sap.ui.controller("local.controller.Detail", {
+
+            });
+
+            var splitApp = new sap.m.SplitApp({
+                masterPages: [sap.ui.xmlview("myView1", {viewContent:jQuery('#view1').html()})],
+                detailPages: [sap.ui.xmlview("myView2", {viewContent:jQuery('#view2').html()})]
+            });
+
+            var shell = sap.m.Shell({
+                showLogout:false,
+                app:splitApp
+            })
+
+            // oView.setModel(new sap.ui.model.json.JSONModel("https://openui5.hana.ondemand.com/test-resources/sap/ui/demokit/explored/products.json"));
+
+            shell.placeAt('content');
+        </script>
+
+    </head>
+
+    <body class="sapUiBody" role="application">
+        <div id="content"></div>
+    </body>
+</html>
