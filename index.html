@@ -39,7 +39,7 @@
                     <subHeader>
                         <Toolbar id="searchBar" >
                             <content>
-                                <SearchField id="searchField" width="100%" placeholder="Поиск ..." showRefreshButton="true" />
+                                <SearchField id="searchField" width="100%" search="onCategorySearch" placeholder="Поиск ..." showRefreshButton="true" />
                             </content>
                         </Toolbar>
                     </subHeader>
@@ -210,7 +210,6 @@
                                 <Input id="newCategoryName" />
                                 <Label text="Количество" />
                                 <Input id="newCategoryCount" value="1" type="Number" />
-
                             </f:content>
                         </f:SimpleForm>
 			
@@ -237,7 +236,20 @@
 	       uId : 2,
 	     });
              this.getView().setModel(this.oModel);
+	     this.categoryList = this.getView().byId("categoryList");
            },
+	   onCategorySearch: function(oEvent) {
+	     var Filter = sap.ui.model.Filter;
+	     var FilterOperator = sap.ui.model.FilterOperator;
+	     // build filter array
+	     var aFilter = [];
+	     var sQuery = oEvent.getParameter("query").trim();
+	     if (sQuery) {
+	       aFilter.push(new Filter("name", FilterOperator.Contains, sQuery));
+	     };
+	     var oBinding = this.categoryList.getBinding("items");
+	     oBinding.filter(aFilter);
+	   },
 	   getCategoryFields: function(name, count) {
 	     var _count = parseInt(count);
 	     if (name && _count){
