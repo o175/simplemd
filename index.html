@@ -55,6 +55,8 @@
                         <Toolbar>
                             <content>
                                 <ToolbarSpacer />
+				<Button press="onSortingButtonPress"
+					icon="sap-icon://sort" />
 				<Button press="onAddCategory"
                                         icon="sap-icon://add" />
                             </content>
@@ -182,7 +184,22 @@
                 </Page>
             </mvc:View>
         </script>
-	
+	<script id="sortingPopoverFragment" type="ui5/fragment">
+	    <core:FragmentDefinition
+		xmlns="sap.m"
+		xmlns:core="sap.ui.core"
+		xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+		<Popover
+		    title="Для сортировки использовать"
+		    class="sapUiContentPadding"
+		    id="sortingPopover"
+		    placement="Top"
+		    initialFocus="email">
+		    <Button text="Название" press="changeSorting" app:sortOn="name"/>
+		    <Button text="Число" press="changeSorting" app:sortOn="count"/>
+		</Popover>
+	    </core:FragmentDefinition>
+	</script>
         <script id="dialogFragment" type="ui5/fragment">
             <core:FragmentDefinition
                 xmlns="sap.m"
@@ -222,6 +239,8 @@
          // Controller definition 4 Matser
          sap.ui.controller("local.controller.Master", {
            onInit: function (oEvent) {
+	     this.onSortingButtonPress = this.onSortingButtonPress.bind(this);
+	     this.changeSorting = this.changeSorting.bind(this);
              this.oModel = new sap.ui.model.json.JSONModel();
              this.oModel.setData({
                categories : [
@@ -269,6 +288,29 @@
 	       this.oDialog.close();
 	     }
 	   },
+           onCloseDialog: function() {
+             this.oDialog.close();
+           },
+	   changeSorting: function(oEvent) {
+	     var sortingAttribute = oEvent.getSource().data("sortOn");
+	     var oBinding = this.categoryList.getBinding("items");
+	     var aSorter = [];
+	     aSorter.push(new sap.ui.model.Sorter(sortingAttribute));
+	     oBinding.sort(aSorter);
+	     this.oModel.refresh();
+	   },
+	   onSortingButtonPress: function(oEvent) {
+             var oView=this.getView();
+             this.oPopOver = sap.ui.getCore().byId("sortingPopover");
+             if (!this.oPopOver) {
+               this.oPopOver = sap.ui.xmlfragment({ fragmentContent : jQuery("#sortingPopoverFragment").html()},this);
+               oView.addDependent(this.oPopOver);
+             }
+	     var oButton = oEvent.getSource();
+	     jQuery.sap.delayedCall(0, this, function () {
+	       this.oPopOver.openBy(oButton);
+	     });
+           },
            onAddCategory: function(oEvent) {
              oView=this.getView();
              this.oDialog = sap.ui.getCore().byId("addCategoryDialog");
