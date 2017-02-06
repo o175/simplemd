@@ -43,18 +43,21 @@
                             </content>
                         </Toolbar>
                     </subHeader>
+
                     <content>
-                        <List id="categoryList" noDataText="Нет данных">
+                        <List id="categoryList" noDataText="Нет данных" items="{/categories}">
                             <items>
-                                <StandardListItem type="Active" counter="5" title="Категория 1" press=".pressExample"/>
-                                <StandardListItem type="Active" counter="2" title="Категория 2" press=".pressExample"/>
-                                <StandardListItem type="Active" counter="4" title="Категория 3" press=".pressExample"/>
-                                <StandardListItem type="Active" counter="7" title="Категория 4" press=".pressExample"/>
+                                <StandardListItem counter="{count}" title="{name}"/>
                             </items>
                         </List>
                     </content>
                     <footer>
                         <Toolbar>
+                            <content>
+                                <ToolbarSpacer />
+				<Button press="onAddCategory"
+                                        icon="sap-icon://add" />
+                            </content>
                         </Toolbar>
                     </footer>
                 </Page>
@@ -151,6 +154,7 @@
                                                     iconDensityAware="false"
                                                     iconInset="false" />
 
+
                                                 <StandardListItem
                                                     title = "Hurricane GX"
                                                     description = "K47322.1"
@@ -172,6 +176,7 @@
                         </VBox>
 
                     </content>
+                    
                     <footer>
                         <Toolbar>
                             <content>
@@ -184,33 +189,112 @@
             </mvc:View>
         </script>
 
+        <script id="dialogFragment" type="ui5/fragment">
+            <core:FragmentDefinition
+                xmlns="sap.m"
+                xmlns:core="sap.ui.core"
+                xmlns:l="sap.ui.layout"
+                xmlns:f="sap.ui.layout.form"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:html="http://www.w3.org/1999/xhtml"
+                >
+                <Dialog
+                    id="addCategoryDialog"
+		    ok="onAddCategorySubmit"
+		    cancel="onCloseDialog"
+                    title="Создать категорию:">
+                    <content>
+                        <f:SimpleForm class="editableForm">
+                            <f:content>
+                                <Label text="Название" />
+                                <Input id="newCategoryName" />
+                                <Label text="Количество" />
+                                <Input id="newCategoryCount" value="1" type="Number" />
+
+                            </f:content>
+                        </f:SimpleForm>
+			
+		    </content>
+		    <beginButton>
+			<Button text="Создать" press="onAddCategorySubmit"/>
+		    </beginButton>
+		    <endButton>
+			<Button text="Отмена" press="onCloseDialog"/>
+		    </endButton>
+		</Dialog>
+            </core:FragmentDefinition>
+        </script>
         <!-- Подключение страниц -->
         <script>
-            // Controller definition 4 Master
-            sap.ui.controller("local.controller.Master", {
-                pressExample: function(oEvent) {
-                  alert('Нажат элемент '+oEvent.getSource().getTitle());
-                }
-            });
+         // Controller definition 4 Matser
+         sap.ui.controller("local.controller.Master", {
+           onInit: function (oEvent) {
+             this.oModel = new sap.ui.model.json.JSONModel();
+             this.oModel.setData({
+               categories : [
+                 { name: "категория 1", count: 4, id: 0 },
+                 { name: "категория 2", count: 2, id: 1 },],
+	       uId : 2,
+	     });
+             this.getView().setModel(this.oModel);
+           },
+	   getCategoryFields: function(name, count) {
+	     var _count = parseInt(count);
+	     if (name && _count){
+	       return {name: name, count: _count}
+	     } else {
+	       alert("Некорректные данные!");
+	       return false;
+	     }
+	   },
+           onCloseDialog: function() {
+             this.oDialog.close();
+           },
+	   onAddCategorySubmit: function() {
+             var count = sap.ui.getCore().byId("newCategoryCount").getValue();
+             var name = sap.ui.getCore().byId("newCategoryName").getValue();
+             count = count.replace(/^D/,"");
+	     var validated = this.getCategoryFields(name, count);
+	     if (validated) {
+	       var id = this.oModel.getProperty("/uId");
+	       this.oModel.setProperty("/uId", id+1);
+               this.oModel.getProperty("/categories").push({name: validated.name, count: validated.count, id: id});
+               this.oModel.refresh();
+	       this.oDialog.close();
+	     }
+	   },
+           onAddCategory: function(oEvent) {
+             oView=this.getView();
+             this.oDialog = sap.ui.getCore().byId("addCategoryDialog");
+             if (!this.oDialog) {
+               this.oDialog = sap.ui.xmlfragment({ fragmentContent : jQuery("#dialogFragment").html()},this);
+               oView.addDependent(this.oDialog);
+             }
+             this.oDialog.open();
+           },
+           pressExample: function(oEvent) {
+             alert('Нажат элемент '+oEvent.getSource().getTitle());
+           }
+         });
 
-            // Controller definition 4 Detail
-            sap.ui.controller("local.controller.Detail", {
+         // Controller definition 4 Detail
+         sap.ui.controller("local.controller.Detail", {
 
-            });
+         });
 
-            var splitApp = new sap.m.SplitApp({
-                masterPages: [sap.ui.xmlview("myView1", {viewContent:jQuery('#view1').html()})],
-                detailPages: [sap.ui.xmlview("myView2", {viewContent:jQuery('#view2').html()})]
-            });
+         var splitApp = new sap.m.SplitApp({
+           masterPages: [sap.ui.xmlview("myView1", {viewContent:jQuery('#view1').html()})],
+           detailPages: [sap.ui.xmlview("myView2", {viewContent:jQuery('#view2').html()})]
+         });
 
-            var shell = sap.m.Shell({
-                showLogout:false,
-                app:splitApp
-            })
+         var shell = sap.m.Shell({
+           showLogout:false,
+           app:splitApp
+         })
 
-            // oView.setModel(new sap.ui.model.json.JSONModel("https://openui5.hana.ondemand.com/test-resources/sap/ui/demokit/explored/products.json"));
+         // oView.setModel(new sap.ui.model.json.JSONModel("https://openui5.hana.ondemand.com/test-resources/sap/ui/demokit/explored/products.json"));
 
-            shell.placeAt('content');
+         shell.placeAt('content');
         </script>
 
     </head>
