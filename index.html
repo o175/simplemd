@@ -101,7 +101,7 @@
                                             text="Confirm Ok"
                                             key="Ok">
 					    <content>
-						<List >
+						<List items="{/goods}" mode="MultiSelect">
 						    <headerToolbar>
 							<Toolbar>
 							    <Title text="Продукты" level="H2" />
@@ -119,33 +119,14 @@
 						    </headerToolbar>
 						    <items>
 							<StandardListItem
-							    title = "Power Projector 4713"
-							    description = "1239102"
-							    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-6100.jpg"
+							    title = "{title}"
+							    description = "{description}"
+							    icon = "{icon}"
 							    iconDensityAware="false"
-							    iconInset="false" />
-
-							<StandardListItem
-							    title = "Gladiator MX"
-							    description = "2212-121-828"
-							    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1071.jpg"
-							    iconDensityAware="false"
-							    iconInset="false" />
-
-
-							<StandardListItem
-							    title = "Hurricane GX"
-							    description = "K47322.1"
-							    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1072.jpg"
-							    iconDensityAware="false"
-							    iconInset="false" />
-
-							<StandardListItem
-							    title = "Webcam"
-							    description = "22134T"
-							    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1112.jpg"
-							    iconDensityAware="false"
-							    iconInset="false" />
+							    iconInset="false"
+							    press="onItemPress"
+							    type="Active"
+							    />
 						    </items>
 						</List>
 					    </content>
@@ -327,8 +308,44 @@
 
          // Controller definition 4 Detail
          sap.ui.controller("local.controller.Detail", {
+	   onInit: function (oEvent) {
+	     this.oModel = new sap.ui.model.json.JSONModel();
+             this.oModel.setData({ goods : [
+	       {
+		 title: "Power Projector 4713",
+		 description: "1239102",
+		 icon: "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-6100.jpg",
+		 price: 80
+	       },
+	       {
+		 title : "Gladiator MX",
+		 description : "2212-121-828",
+		 icon : "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1071.jpg",
+		 price: 55
+	       },
 
-         });
+	       {
+		 title : "Hurricane GX",
+		 description : "K47322.1",
+		 icon : "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1072.jpg",
+		 price: 35
+	       },
+	       {
+		 title : "Webcam",
+		 description : "22134T",
+		 icon : "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1112.jpg",
+		 price: 23
+	       }
+	     ],
+	     });
+             this.getView().setModel(this.oModel);
+           },
+	   onItemPress: function(oEvent){
+	     var item = oEvent.getSource();
+	     item.setSelected(!item.getSelected())
+	   },
+	     
+	 });
 
          var splitApp = new sap.m.SplitApp({
            masterPages: [sap.ui.xmlview("myView1", {viewContent:jQuery('#view1').html()})],
