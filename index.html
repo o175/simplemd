@@ -91,86 +91,87 @@
                                     id="idIconTabBar"
                                     class="sapUiResponsiveContentPadding">
                                     <items>
-                                      <IconTabFilter
-                                        icon="sap-icon://begin"
-                                        iconColor="Positive"
-                                        design="Horizontal"
-                                        count="7 из 14"
-                                        text="Confirm Ok"
-                                        key="Ok" />
-                                      <IconTabSeparator icon="sap-icon://open-command-field" />
-                                      <IconTabFilter
-                                        icon="sap-icon://compare"
-                                        iconColor="Critical"
-                                        design="Horizontal"
-                                        count="5 из 14"
-                                        text="Check Heavys"
-                                        key="Heavy" />
-                                      <IconTabSeparator icon="sap-icon://open-command-field" />
-                                      <IconTabFilter
-                                        icon="sap-icon://inventory"
-                                        iconColor="Negative"
-                                        design="Horizontal"
-                                        count="2 из 14"
-                                        text="Claim Overweights"
-                                        key="Overweight" />
+					<IconTabFilter
+                                            icon="sap-icon://begin"
+                                            iconColor="Positive"
+                                            design="Horizontal"
+                                            count="7 из 14"
+                                            text="Confirm Ok"
+                                            key="Ok">
+					    <content>
+						<List >
+						    <headerToolbar>
+							<Toolbar>
+							    <Title text="Продукты" level="H2" />
+							    <ToolbarSpacer />
+							    <Button
+								icon="sap-icon://settings"
+								press="handleButtonPress" />
+							    <Button
+								icon="sap-icon://person-placeholder"
+								press="handleButtonPress" />
+							    <Button
+								icon="sap-icon://drop-down-list"
+								press="handleButtonPress" />
+							</Toolbar>
+						    </headerToolbar>
+						    <infoToolbar>
+							<Toolbar
+							    active="true"
+							    press="handleInfobarPress" >
+							    <Label text="This is the info bar" />
+							</Toolbar>
+						    </infoToolbar>
+						    <items>
+							<StandardListItem
+							    title = "Power Projector 4713"
+							    description = "1239102"
+							    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-6100.jpg"
+							    iconDensityAware="false"
+							    iconInset="false" />
+
+							<StandardListItem
+							    title = "Gladiator MX"
+							    description = "2212-121-828"
+							    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1071.jpg"
+							    iconDensityAware="false"
+							    iconInset="false" />
+
+
+							<StandardListItem
+							    title = "Hurricane GX"
+							    description = "K47322.1"
+							    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1072.jpg"
+							    iconDensityAware="false"
+							    iconInset="false" />
+
+							<StandardListItem
+							    title = "Webcam"
+							    description = "22134T"
+							    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1112.jpg"
+							    iconDensityAware="false"
+							    iconInset="false" />
+						    </items>
+						</List>
+					    </content>
+					</IconTabFilter>
+					<IconTabSeparator icon="sap-icon://open-command-field" />
+					<IconTabFilter
+                                            icon="sap-icon://compare"
+                                            iconColor="Critical"
+                                            design="Horizontal"
+                                            count="5 из 14"
+                                            text="Check Heavys"
+                                            key="Heavy" />
+					<IconTabSeparator icon="sap-icon://open-command-field" />
+					<IconTabFilter
+                                            icon="sap-icon://inventory"
+                                            iconColor="Negative"
+                                            design="Horizontal"
+                                            count="2 из 14"
+                                            text="Claim Overweights"
+                                            key="Overweight" />
                                     </items>
-                                    <content>
-                                        <List >
-                                            <headerToolbar>
-                                              <Toolbar>
-                                                <Title text="Продукты" level="H2" />
-                                                <ToolbarSpacer />
-                                                <Button
-                                                  icon="sap-icon://settings"
-                                                  press="handleButtonPress" />
-                                                <Button
-                                                  icon="sap-icon://person-placeholder"
-                                                  press="handleButtonPress" />
-                                                <Button
-                                                  icon="sap-icon://drop-down-list"
-                                                  press="handleButtonPress" />
-                                              </Toolbar>
-                                            </headerToolbar>
-                                            <infoToolbar>
-                                              <Toolbar
-                                                active="true"
-                                                press="handleInfobarPress" >
-                                                <Label text="This is the info bar" />
-                                              </Toolbar>
-                                            </infoToolbar>
-                                            <items>
-                                                <StandardListItem
-                                                    title = "Power Projector 4713"
-                                                    description = "1239102"
-                                                    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-6100.jpg"
-                                                    iconDensityAware="false"
-                                                    iconInset="false" />
-
-                                                <StandardListItem
-                                                    title = "Gladiator MX"
-                                                    description = "2212-121-828"
-                                                    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1071.jpg"
-                                                    iconDensityAware="false"
-                                                    iconInset="false" />
-
-
-                                                <StandardListItem
-                                                    title = "Hurricane GX"
-                                                    description = "K47322.1"
-                                                    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1072.jpg"
-                                                    iconDensityAware="false"
-                                                    iconInset="false" />
-
-                                                <StandardListItem
-                                                    title = "Webcam"
-                                                    description = "22134T"
-                                                    icon = "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1112.jpg"
-                                                    iconDensityAware="false"
-                                                    iconInset="false" />
-                                            </items>
-                                        </List>
-                                    </content>
                                 </IconTabBar>
                             </items>
                         </VBox>
@@ -188,7 +189,7 @@
                 </Page>
             </mvc:View>
         </script>
-
+	
         <script id="dialogFragment" type="ui5/fragment">
             <core:FragmentDefinition
                 xmlns="sap.m"
