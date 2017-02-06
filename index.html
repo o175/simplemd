@@ -101,7 +101,7 @@
                                             text="Confirm Ok"
                                             key="Ok">
 					    <content>
-						<List items="{/goods}" mode="MultiSelect">
+						<List id="goodsList" items="{/goods}" mode="MultiSelect">
 						    <headerToolbar>
 							<Toolbar>
 							    <Title text="Продукты" level="H2" />
@@ -158,7 +158,7 @@
                         <Toolbar>
                             <content>
                                 <ToolbarSpacer />
-                                <Button text="Добавить в корзину" icon="sap-icon://add" />
+                                <Button text="Добавить в корзину" icon="sap-icon://add"  press="onAddToCart"/>
                             </content>
                         </Toolbar>
                     </footer>
@@ -283,7 +283,7 @@
 	   onSortingButtonPress: function(oEvent) {
              var oView=this.getView();
              this.oPopOver = sap.ui.getCore().byId("sortingPopover");
-             if (!this.oPopOver) {
+            if (!this.oPopOver) {
                this.oPopOver = sap.ui.xmlfragment({ fragmentContent : jQuery("#sortingPopoverFragment").html()},this);
                oView.addDependent(this.oPopOver);
              }
@@ -339,11 +339,20 @@
 	     ],
 	     });
              this.getView().setModel(this.oModel);
+	     this.goodsList = this.getView().byId("goodsList");
            },
 	   onItemPress: function(oEvent){
 	     var item = oEvent.getSource();
 	     item.setSelected(!item.getSelected())
 	   },
+	   onAddToCart: function(){
+	     var goods = this.goodsList.getSelectedItems();
+	     var msgString = goods.reduce(function(previousValue, currentValue){
+	       return previousValue + "\r\n" + currentValue.getTitle()
+	     },"Вы выбрали:");
+	     sap.m.MessageToast.show(msgString);
+	   },
+
 	     
 	 });
 
