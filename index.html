@@ -72,10 +72,11 @@
                 controllerName="local.controller.Detail"
                 xmlns="sap.m"
                 xmlns:sap.ui.core="sap.ui.core"
-                xmlns:mvc="sap.ui.core.mvc" >
+                xmlns:mvc="sap.ui.core.mvc"
+		xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
                 <Page id="page" navButtonPress="handleNavButtonPress" title="{Name}" showNavButton="{device>/isPhone}">
                     <content>
-                        <ObjectHeader title="Laptop Case" number="78.99" numberUnit="EUR" introActive="false" titleActive="false" iconActive="false">
+                        <ObjectHeader title="Laptop Case" number="{/TotalCost}" numberUnit="EUR" introActive="false" titleActive="false" iconActive="false">
                             <attributes>
                                 <ObjectAttribute text="Red point stories" active="false" />
                                 <ObjectAttribute text="Laptop Case with many room for pencils and other stationaries" active="false" />
@@ -101,7 +102,7 @@
                                             text="Confirm Ok"
                                             key="Ok">
 					    <content>
-						<List id="goodsList" items="{/goods}" mode="MultiSelect">
+						<List id="goodsList" items="{/goods}" mode="MultiSelect" select="onItemSelect">
 						    <headerToolbar>
 							<Toolbar>
 							    <Title text="Продукты" level="H2" />
@@ -126,6 +127,7 @@
 							    iconInset="false"
 							    press="onItemPress"
 							    type="Active"
+							    app:price="{price}"
 							    />
 						    </items>
 						</List>
@@ -337,13 +339,23 @@
 		 price: 23
 	       }
 	     ],
+				   TotalCost: 0,
 	     });
              this.getView().setModel(this.oModel);
 	     this.goodsList = this.getView().byId("goodsList");
            },
+	   onItemSelect: function(){
+	     var goods = this.goodsList.getSelectedItems();
+	     var newCost = goods.reduce(function(a, b){
+	       return a + b.data("price")
+	     },0);
+	     this.oModel.oData.TotalCost = newCost;
+	     this.oModel.refresh();
+	   },
 	   onItemPress: function(oEvent){
 	     var item = oEvent.getSource();
-	     item.setSelected(!item.getSelected())
+	     item.setSelected(!item.getSelected());
+	     this.onItemSelect();
 	   },
 	   onAddToCart: function(){
 	     var goods = this.goodsList.getSelectedItems();
