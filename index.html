@@ -20,7 +20,7 @@
             type="text/javascript"
             src="https://sapui5.hana.ondemand.com/sdk/resources/sap-ui-core.js"
             data-sap-ui-theme="sap_belize"
-            data-sap-ui-libs="sap.m"
+            data-sap-ui-libs="sap.m,sap.ui.layout"
             data-sap-ui-xx-bindingSyntax="complex"
         >
         </script>
@@ -31,6 +31,7 @@
                 controllerName="local.controller.Master"
                 xmlns="sap.m"
                 xmlns:sap.ui.core="sap.ui.core"
+		xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
                 xmlns:mvc="sap.ui.core.mvc" >
                 <Page id="page" title="Выбор категории" showFooter="true">
                     <headerContent>
@@ -47,7 +48,12 @@
                     <content>
                         <List id="categoryList" noDataText="Нет данных" items="{/categories}">
                             <items>
-                                <StandardListItem counter="{count}" title="{name}"/>
+                                <StandardListItem
+				    counter="{count}"
+				    title="{name}"
+				    app:id="{id}"
+				    type="Active"
+				    press="openChangeDialog" />
                             </items>
                         </List>
                     </content>
@@ -234,6 +240,48 @@
              this.getView().setModel(this.oModel);
 	     this.categoryList = this.getView().byId("categoryList");
            },
+	   openChangeDialog: function(oEvent) {
+	     var Dialog = sap.m.Dialog;
+	     var Button = sap.m.Button;
+	     var SimpleForm = sap.ui.layout.form.SimpleForm;
+	     var Label = sap.m.Label;
+	     var id = oEvent.getSource().data("id");
+	     var category = this.oModel.getProperty("/categories").find(function(x){ return x.id === id });
+	     var nameInput = new sap.m.Input({value: category.name});
+	     var countInput = new sap.m.Input({value: category.count});
+	     var dialog = new Dialog({
+	       title: "Изменить категорию:",
+	       content: new SimpleForm({
+		 content: [
+		   new Label({text: "Название"}),
+		   nameInput,
+		   new Label({text: "Количество"}),
+		   countInput,
+		 ]
+	       }),
+	       beginButton: new Button({
+		 text: 'Сохранить',
+		 press: function () {
+		   var validated = this.getCategoryFields(nameInput.getValue().trim(), countInput.getValue().trim());
+		   if (validated){
+		     category.name = validated.name;
+		     category.count = validated.count;
+		     this.oModel.refresh();
+		     dialog.close();
+		   }
+		 }.bind(this)
+	       }),
+	       endButton: new Button({
+		 text: 'Отмена',
+		 press: function () {
+		   dialog.close();
+		 }
+	       }),
+	       afterClose: function() {
+		 dialog.destroy();
+	       }});
+	     dialog.open();
+	   },
 	   onCategorySearch: function(oEvent) {
 	     var Filter = sap.ui.model.Filter;
 	     var FilterOperator = sap.ui.model.FilterOperator;
