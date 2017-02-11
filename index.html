@@ -228,222 +228,237 @@
         <!-- Подключение страниц -->
         <script>
          // Controller definition 4 Matser
-         sap.ui.controller("local.controller.Master", {
-           onInit: function (oEvent) {
-	     this.onSortingButtonPress = this.onSortingButtonPress.bind(this);
-	     this.changeSorting = this.changeSorting.bind(this);
-             this.oModel = new sap.ui.model.json.JSONModel();
-             this.oModel.setData({
-               categories : [
-                 { name: "категория 1", count: 4, id: 0 },
-                 { name: "категория 2", count: 2, id: 1 },],
-	       uId : 2,
-	     });
-             this.getView().setModel(this.oModel);
-	     this.categoryList = this.getView().byId("categoryList");
-           },
-	   openChangeDialog: function(oEvent) {
-	     var Dialog = sap.m.Dialog;
-	     var Button = sap.m.Button;
-	     var SimpleForm = sap.ui.layout.form.SimpleForm;
-	     var Label = sap.m.Label;
-	     var id = oEvent.getSource().data("id");
-	     var category = this.oModel.getProperty("/categories").find(function(x){ return x.id === id });
-	     var nameInput = new sap.m.Input({value: category.name});
-	     var countInput = new sap.m.Input({value: category.count});
-	     var dialog = new Dialog({
-	       title: "Изменить категорию:",
-	       content: new SimpleForm({
-		 content: [
-		   new Label({text: "Название"}),
-		   nameInput,
-		   new Label({text: "Количество"}),
-		   countInput,
-		 ]
-	       }),
-	       beginButton: new Button({
-		 text: 'Сохранить',
-		 press: function () {
-		   var validated = this.getCategoryFields(nameInput.getValue().trim(), countInput.getValue().trim());
-		   if (validated){
-		     category.name = validated.name;
-		     category.count = validated.count;
-		     this.oModel.refresh();
-		     dialog.close();
-		   }
-		 }.bind(this)
-	       }),
-	       endButton: new Button({
-		 text: 'Отмена',
-		 press: function () {
-		   dialog.close();
-		 }
-	       }),
-	       afterClose: function() {
-		 dialog.destroy();
-	       }});
-	     dialog.open();
-	   },
-	   onCategorySearch: function(oEvent) {
-	     var Filter = sap.ui.model.Filter;
-	     var FilterOperator = sap.ui.model.FilterOperator;
-	     // build filter array
-	     var aFilter = [];
-	     var sQuery = oEvent.getParameter("query").trim();
-	     if (sQuery) {
-	       aFilter.push(new Filter("name", FilterOperator.Contains, sQuery));
-	     };
-	     var oBinding = this.categoryList.getBinding("items");
-	     oBinding.filter(aFilter);
-	   },
-	   getCategoryFields: function(name, count) {
-	     var _count = parseInt(count);
-	     if (name && _count){
-	       return {name: name, count: _count}
-	     } else {
-	       alert("Некорректные данные!");
-	       return false;
-	     }
-	   },
-           onCloseDialog: function() {
-             this.oDialog.close();
-           },
-	   onAddCategorySubmit: function() {
-             var count = sap.ui.getCore().byId("newCategoryCount").getValue();
-             var name = sap.ui.getCore().byId("newCategoryName").getValue();
-             count = count.replace(/^D/,"");
-	     var validated = this.getCategoryFields(name, count);
-	     if (validated) {
-	       var id = this.oModel.getProperty("/uId");
-	       this.oModel.setProperty("/uId", id+1);
-               this.oModel.getProperty("/categories").push({name: validated.name, count: validated.count, id: id});
-               this.oModel.refresh();
-	       this.oDialog.close();
-	     }
-	   },
-           onCloseDialog: function() {
-             this.oDialog.close();
-           },
-	   changeSorting: function(oEvent) {
-	     var sortingAttribute = oEvent.getSource().data("sortOn");
-	     var oBinding = this.categoryList.getBinding("items");
-	     var aSorter = [];
-	     aSorter.push(new sap.ui.model.Sorter(sortingAttribute));
-	     oBinding.sort(aSorter);
-	     this.oModel.refresh();
-	   },
-	   onSortingButtonPress: function(oEvent) {
-             var oView=this.getView();
-             this.oPopOver = sap.ui.getCore().byId("sortingPopover");
-            if (!this.oPopOver) {
-               this.oPopOver = sap.ui.xmlfragment({ fragmentContent : jQuery("#sortingPopoverFragment").html()},this);
-               oView.addDependent(this.oPopOver);
-             }
-	     var oButton = oEvent.getSource();
-	     jQuery.sap.delayedCall(0, this, function () {
-	       this.oPopOver.openBy(oButton);
-	     });
-           },
-           onAddCategory: function(oEvent) {
-             oView=this.getView();
-             this.oDialog = sap.ui.getCore().byId("addCategoryDialog");
-             if (!this.oDialog) {
-               this.oDialog = sap.ui.xmlfragment({ fragmentContent : jQuery("#dialogFragment").html()},this);
-               oView.addDependent(this.oDialog);
-             }
-             this.oDialog.open();
-           },
-           pressExample: function(oEvent) {
-             alert('Нажат элемент '+oEvent.getSource().getTitle());
-           }
-         });
+sap.ui.controller('local.controller.Master', {
+  onInit: function () {
+    this.onSortingButtonPress = this.onSortingButtonPress.bind(this);
+    this.changeSorting = this.changeSorting.bind(this);
+    this.oModel = new sap.ui.model.json.JSONModel();
+    this.oModel.setData({
+      categories: [
+        {name: 'категория 1', count: 4, id: 0},
+        {name: 'категория 2', count: 2, id: 1},
+      ],
+      uId: 2,
+    });
+    this.getView().setModel(this.oModel);
+    this.categoryList = this.getView().byId('categoryList');
+  },
+  openChangeDialog: function (oEvent) {
+    var Dialog = sap.m.Dialog;
+    var Button = sap.m.Button;
+    var SimpleForm = sap.ui.layout.form.SimpleForm;
+    var Label = sap.m.Label;
+    var id = oEvent.getSource().data('id');
+    var category = this.oModel
+                       .getProperty('/categories')
+                       .find(function (x) {
+                         return x.id === id;
+                       });
+    var nameInput = new sap.m.Input({value: category.name});
+    var countInput = new sap.m.Input({value: category.count});
+    var dialog = new Dialog({
+      title: 'Изменить категорию:',
+      content: new SimpleForm({
+        content: [
+          new Label({text: 'Название'}),
+          nameInput,
+          new Label({text: 'Количество'}),
+          countInput,
+        ],
+      }),
+      beginButton: new Button({
+        text: 'Сохранить',
+        press: function () {
+          var validated = this.getCategoryFields(
+            nameInput.getValue().trim(),
+            countInput.getValue().trim()
+          );
+          if (validated) {
+            category.name = validated.name;
+            category.count = validated.count;
+            this.oModel.refresh();
+            dialog.close();
+          }
+        }.bind(this),
+      }),
+      endButton: new Button({
+        text: 'Отмена',
+        press: function () {
+          dialog.close();
+        },
+      }),
+      afterClose: function () {
+        dialog.destroy();
+      }});
+    dialog.open();
+  },
+  onCategorySearch: function (oEvent) {
+    var Filter = sap.ui.model.Filter;
+    var FilterOperator = sap.ui.model.FilterOperator;
+    // build filter array
+    var aFilter = [];
+    var sQuery = oEvent.getParameter('query').trim();
+    if (sQuery) {
+      aFilter.push(new Filter('name', FilterOperator.Contains, sQuery));
+    }
+    var oBinding = this.categoryList.getBinding('items');
+    oBinding.filter(aFilter);
+  },
+  getCategoryFields: function (name, count) {
+    var _count = parseInt(count);
+    if (name && _count) {
+      return {name: name, count: _count};
+    } else {
+      alert('Некорректные данные!');
+      return false;
+    }
+  },
+  onCloseDialog: function () {
+    this.oDialog.close();
+  },
+  onAddCategorySubmit: function () {
+    var oModel = this.oModel;
+    var count = sap.ui.getCore().byId('newCategoryCount').getValue();
+    var name = sap.ui.getCore().byId('newCategoryName').getValue();
+    count = count.replace(/^D/, '');
+    var validated = this.getCategoryFields(name, count);
+    if (validated) {
+      var id = oModel.getProperty('/uId');
+      oModel.setProperty('/uId', id + 1);
+      oModel
+        .getProperty('/categories')
+        .push({
+          name: validated.name,
+          count: validated.count,
+          id: id,
+        });
+      oModel.refresh();
+      this.oDialog.close();
+    }
+  },
+  changeSorting: function (oEvent) {
+    var sortingAttribute = oEvent.getSource().data('sortOn');
+    var oBinding = this.categoryList.getBinding('items');
+    var aSorter = [];
+    aSorter.push(new sap.ui.model.Sorter(sortingAttribute));
+    oBinding.sort(aSorter);
+    this.oModel.refresh();
+  },
+  onSortingButtonPress: function (oEvent) {
+    var oView = this.getView();
+    this.oPopOver = sap.ui.getCore().byId('sortingPopover');
+    if (!this.oPopOver) {
+      this.oPopOver = sap.ui.xmlfragment(
+        {fragmentContent: jQuery('#sortingPopoverFragment').html()},
+        this
+      );
+      oView.addDependent(this.oPopOver);
+    }
+    var oButton = oEvent.getSource();
+    jQuery.sap.delayedCall(0, this, function () {
+      this.oPopOver.openBy(oButton);
+    });
+  },
+  onAddCategory: function () {
+    var oView = this.getView();
+    this.oDialog = sap.ui.getCore().byId('addCategoryDialog');
+    if (!this.oDialog) {
+      this.oDialog = sap.ui.xmlfragment({fragmentContent: jQuery('#dialogFragment').html()}, this);
+      oView.addDependent(this.oDialog);
+    }
+    this.oDialog.open();
+  },
+  pressExample: function (oEvent) {
+    alert('Нажат элемент ' + oEvent.getSource().getTitle());
+  },
+});
 
-         // Controller definition 4 Detail
-         sap.ui.controller("local.controller.Detail", {
-	   onInit: function (oEvent) {
-	     this.oModel = new sap.ui.model.json.JSONModel();
-             this.oModel.setData({ goods : [
-	       {
-		 title: "Power Projector 4713",
-		 description: "1239102",
-		 icon: "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-6100.jpg",
-		 price: 80
-	       },
-	       {
-		 title : "Gladiator MX",
-		 description : "2212-121-828",
-		 icon : "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1071.jpg",
-		 price: 55
-	       },
+// Controller definition 4 Detail
+sap.ui.controller('local.controller.Detail', {
+  onInit: function () {
+    this.oModel = new sap.ui.model.json.JSONModel();
+    this.oModel.setData({goods: [
+      {
+        title: 'Power Projector 4713',
+        description: '1239102',
+        icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-6100.jpg',
+        price: 80,
+      },
+      {
+        title: 'Gladiator MX',
+        description: '2212-121-828',
+        icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1071.jpg',
+        price: 55,
+      },
 
-	       {
-		 title : "Hurricane GX",
-		 description : "K47322.1",
-		 icon : "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1072.jpg",
-		 price: 35
-	       },
-	       {
-		 title : "Webcam",
-		 description : "22134T",
-		 icon : "https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1112.jpg",
-		 price: 23
-	       }
-	     ],
-				   TotalCost: 0,
-	     });
-             this.getView().setModel(this.oModel);
-	     this.goodsList = this.getView().byId("goodsList");
-           },
-	   onItemSelect: function(){
-	     var goods = this.goodsList.getSelectedItems();
-	     var newCost = goods.reduce(function(a, b){
-	       return a + b.data("price")
-	     },0);
-	     this.oModel.oData.TotalCost = newCost;
-	     this.oModel.refresh();
-	   },
-	   onItemPress: function(oEvent){
-	     var item = oEvent.getSource();
-	     item.setSelected(!item.getSelected());
-	     this.onItemSelect();
-	   },
-	   onAddToCart: function(){
-	     var goods = this.goodsList.getSelectedItems();
-	     var msgString = goods.reduce(function(previousValue, currentValue){
-	       return previousValue + "\r\n" + currentValue.getTitle()
-	     },"Вы выбрали:");
-	     sap.m.MessageToast.show(msgString);
-	   },
-	   handleIconTabBarSelect: function (oEvent) {
-	     var oBinding = this.goodsList.getBinding("items"),
-		 sKey = oEvent.getParameter("key"),
-		 oFilter;
-	     var Filter = sap.ui.model.Filter;
-	     if (sKey === "notCheap") {
-	       oFilter = new Filter("price", "BT", 41, 60);
-	       oBinding.filter([oFilter]);
-	     } else if (sKey === "Expensive") {
-	       oFilter = new Filter("price", "GT", 60);
-	       oBinding.filter([oFilter]);
-	     } else {
-	       oBinding.filter([]);
-	     }
-	   }
-	 });
+      {
+        title: 'Hurricane GX',
+        description: 'K47322.1',
+        icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1072.jpg',
+        price: 35,
+      },
+      {
+        title: 'Webcam',
+        description: '22134T',
+        icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1112.jpg',
+        price: 23,
+      },
+    ],
+                         TotalCost: 0,
+    });
+    this.getView().setModel(this.oModel);
+    this.goodsList = this.getView().byId('goodsList');
+  },
+  onItemSelect: function () {
+    var goods = this.goodsList.getSelectedItems();
+    var newCost = goods.reduce(function (a, b) {
+      return a + b.data('price');
+    }, 0);
+    this.oModel.oData.TotalCost = newCost;
+    this.oModel.refresh();
+  },
+  onItemPress: function (oEvent) {
+    var item = oEvent.getSource();
+    item.setSelected(!item.getSelected());
+    this.onItemSelect();
+  },
+  onAddToCart: function () {
+    var goods = this.goodsList.getSelectedItems();
+    var msgString = goods.reduce(function (previousValue, currentValue) {
+      return previousValue + '\r\n' + currentValue.getTitle();
+    }, 'Вы выбрали:');
+    sap.m.MessageToast.show(msgString);
+  },
+  handleIconTabBarSelect: function (oEvent) {
+    var oBinding = this.goodsList.getBinding('items');
+    var sKey = oEvent.getParameter('key');
+    var oFilter;
+    var Filter = sap.ui.model.Filter;
+    if (sKey === 'notCheap') {
+      oFilter = new Filter('price', 'BT', 41, 60);
+      oBinding.filter([oFilter]);
+    } else if (sKey === 'Expensive') {
+      oFilter = new Filter('price', 'GT', 60);
+      oBinding.filter([oFilter]);
+    } else {
+      oBinding.filter([]);
+    }
+  },
+});
 
-         var splitApp = new sap.m.SplitApp({
-           masterPages: [sap.ui.xmlview("myView1", {viewContent:jQuery('#view1').html()})],
-           detailPages: [sap.ui.xmlview("myView2", {viewContent:jQuery('#view2').html()})]
-         });
+var splitApp = new sap.m.SplitApp({
+  masterPages: [sap.ui.xmlview('myView1', {viewContent: jQuery('#view1').html()})],
+  detailPages: [sap.ui.xmlview('myView2', {viewContent: jQuery('#view2').html()})],
+});
 
-         var shell = sap.m.Shell({
-           showLogout:false,
-           app:splitApp
-         })
+var shell = sap.m.Shell({
+  showLogout: false,
+  app: splitApp,
+});
 
-         // oView.setModel(new sap.ui.model.json.JSONModel("https://openui5.hana.ondemand.com/test-resources/sap/ui/demokit/explored/products.json"));
+// oView.setModel(new sap.ui.model.json.JSONModel("https://openui5.hana.ondemand.com/test-resources/sap/ui/demokit/explored/products.json"));
 
-         shell.placeAt('content');
+shell.placeAt('content');
         </script>
 
     </head>
