@@ -33,6 +33,6 @@
 
 # Optional todos
 
--   [ ] сконфигурировать eslint для bdo
--   [ ] исправить codestyle
+-   [X] сконфигурировать eslint для bdo
+-   [X] исправить codestyle
 -   [ ] попробовать писать xml на Jade

@@ -4,466 +4,478 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta charset="UTF-8">
 
-        <title>Просмотр товара</title>
+            <title>Просмотр товара</title>
 
-        <style type="text/css">
-            /* все элементы VBox'a с шириной во всю строку */
-            #myView2--idVBox > div {
+            <style type="text/css">
+                /* все элементы VBox'a с шириной во всю строку */
+                #myView2--idVBox > div {
                 width: 100%;
-            }
-        </style>
+                }
+            </style>
 
-        <!-- src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js" -->
+            <!-- src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js" -->
 
-        <script
-            id="sap-ui-bootstrap"
-            type="text/javascript"
-            src="https://sapui5.hana.ondemand.com/sdk/resources/sap-ui-core.js"
-            data-sap-ui-theme="sap_belize"
-            data-sap-ui-libs="sap.m,sap.ui.layout"
-            data-sap-ui-xx-bindingSyntax="complex"
-        >
-        </script>
-
-        <!-- Страница выбора категории -->
-        <script id="view1" type="sapui5/xmlview" >
-            <mvc:View
-                controllerName="local.controller.Master"
-                xmlns="sap.m"
-                xmlns:sap.ui.core="sap.ui.core"
-		xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
-                xmlns:mvc="sap.ui.core.mvc" >
-                <Page id="page" title="Выбор категории" showFooter="true">
-                    <headerContent>
-                        <Button icon="sap-icon://cart" tooltip="Добавить в корзину" />
-                    </headerContent>
-                    <subHeader>
-                        <Toolbar id="searchBar" >
-                            <content>
-                                <SearchField id="searchField" width="100%" search="onCategorySearch" placeholder="Поиск ..." showRefreshButton="true" />
-                            </content>
-                        </Toolbar>
-                    </subHeader>
-
-                    <content>
-                        <List id="categoryList" noDataText="Нет данных" items="{/categories}">
-                            <items>
-                                <StandardListItem
-				    counter="{count}"
-				    title="{name}"
-				    app:id="{id}"
-				    type="Active"
-				    press="openChangeDialog" />
-                            </items>
-                        </List>
-                    </content>
-                    <footer>
-                        <Toolbar>
-                            <content>
-                                <ToolbarSpacer />
-				<Button press="onSortingButtonPress"
-					icon="sap-icon://sort" />
-				<Button press="onAddCategory"
-                                        icon="sap-icon://add" />
-                            </content>
-                        </Toolbar>
-                    </footer>
-                </Page>
-            </mvc:View>
-        </script>
-
-        <!-- Детальная страница -->
-        <script id="view2" type="sapui5/xmlview">
-            <mvc:View
-                controllerName="local.controller.Detail"
-                xmlns="sap.m"
-                xmlns:sap.ui.core="sap.ui.core"
-                xmlns:mvc="sap.ui.core.mvc"
-		xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-                <Page id="page" navButtonPress="handleNavButtonPress" title="{Name}" showNavButton="{device>/isPhone}">
-                    <content>
-                        <ObjectHeader title="Laptop Case" number="{/TotalCost}" numberUnit="EUR" introActive="false" titleActive="false" iconActive="false">
-                            <attributes>
-                                <ObjectAttribute text="Red point stories" active="false" />
-                                <ObjectAttribute text="Laptop Case with many room for pencils and other stationaries" active="false" />
-                                <ObjectAttribute text="789g" active="false" />
-                            </attributes>
-                            <firstStatus>
-                                <ObjectStatus text="Доступен" state="Success" />
-                            </firstStatus>
-                        </ObjectHeader>
-                        <VBox id="idVBox" direction="Column" alignItems="Center">
-                            <items>
-                                <IconTabBar
-                                    expanded="true"
-				    width="100%"
-				    select="handleIconTabBarSelect"
-                                    id="idIconTabBar"
-                                    class="sapUiResponsiveContentPadding">
-                                    <items>
-					<IconTabFilter
-                                            icon="sap-icon://begin"
-                                            iconColor="Positive"
-                                            design="Horizontal"
-                                            count="7 из 14"
-                                            text="Любые"
-                                            key="Ok">
-
-					</IconTabFilter>
-					<IconTabSeparator icon="sap-icon://open-command-field" />
-					<IconTabFilter
-                                            icon="sap-icon://compare"
-                                            iconColor="Critical"
-                                            design="Horizontal"
-                                            count="5 из 14"
-                                            text="Средние"
-                                            key="notCheap" />
-					<IconTabSeparator icon="sap-icon://open-command-field" />
-					<IconTabFilter
-                                            icon="sap-icon://loan"
-                                            iconColor="Negative"
-                                            design="Horizontal"
-                                            count="2 из 14"
-                                            text="Дорогие"
-                                            key="Expensive" />
-                                    </items>
-				    <content>
-					<List id="goodsList" items="{/goods}" mode="MultiSelect" select="onItemSelect">
-					    <headerToolbar>
-						<Toolbar>
-						    <Title text="Продукты" level="H2" />
-						    <ToolbarSpacer />
-						    <Button
-							icon="sap-icon://settings"
-							press="handleButtonPress" />
-						    <Button
-							icon="sap-icon://person-placeholder"
-							press="handleButtonPress" />
-						    <Button
-							icon="sap-icon://drop-down-list"
-							press="handleButtonPress" />
-						</Toolbar>
-					    </headerToolbar>
-					    <items>
-						<StandardListItem
-						    title = "{title}"
-						    description = "{description} - {price}€"
-						    icon = "{icon}"
-						    iconDensityAware="false"
-						    iconInset="false"
-						    press="onItemPress"
-						    type="Active"
-						    app:price="{price}"
-						    />
-					    </items>
-					</List>
-				    </content>
-                                </IconTabBar>
-                            </items>
-                        </VBox>
-
-                    </content>
-                    
-                    <footer>
-                        <Toolbar>
-                            <content>
-                                <ToolbarSpacer />
-                                <Button text="Добавить в корзину" icon="sap-icon://add"  press="onAddToCart"/>
-                            </content>
-                        </Toolbar>
-                    </footer>
-                </Page>
-            </mvc:View>
-        </script>
-	<script id="sortingPopoverFragment" type="ui5/fragment">
-	    <core:FragmentDefinition
-		xmlns="sap.m"
-		xmlns:core="sap.ui.core"
-		xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-		<Popover
-		    title="Для сортировки использовать"
-		    class="sapUiContentPadding"
-		    id="sortingPopover"
-		    placement="Top"
-		    initialFocus="email">
-		    <Button text="Название" press="changeSorting" app:sortOn="name"/>
-		    <Button text="Число" press="changeSorting" app:sortOn="count"/>
-		</Popover>
-	    </core:FragmentDefinition>
-	</script>
-        <script id="dialogFragment" type="ui5/fragment">
-            <core:FragmentDefinition
-                xmlns="sap.m"
-                xmlns:core="sap.ui.core"
-                xmlns:l="sap.ui.layout"
-                xmlns:f="sap.ui.layout.form"
-		xmlns:mvc="sap.ui.core.mvc"
-		xmlns:html="http://www.w3.org/1999/xhtml"
+            <script
+                id="sap-ui-bootstrap"
+                type="text/javascript"
+                src="https://sapui5.hana.ondemand.com/sdk/resources/sap-ui-core.js"
+                data-sap-ui-theme="sap_belize"
+                data-sap-ui-libs="sap.m,sap.ui.layout,sap.ui.table"
+                data-sap-ui-xx-bindingSyntax="complex"
                 >
-                <Dialog
-                    id="addCategoryDialog"
-		    ok="onAddCategorySubmit"
-		    cancel="onCloseDialog"
-                    title="Создать категорию:">
-                    <content>
-                        <f:SimpleForm class="editableForm">
-                            <f:content>
-                                <Label text="Название" />
-                                <Input id="newCategoryName" />
-                                <Label text="Количество" />
-                                <Input id="newCategoryCount" value="1" type="Number" />
-                            </f:content>
-                        </f:SimpleForm>
-			
-		    </content>
-		    <beginButton>
-			<Button text="Создать" press="onAddCategorySubmit"/>
-		    </beginButton>
-		    <endButton>
-			<Button text="Отмена" press="onCloseDialog"/>
-		    </endButton>
-		</Dialog>
-            </core:FragmentDefinition>
-        </script>
+            </script>
+
+            <!-- Страница выбора категории -->
+            <script id="view1" type="sapui5/xmlview" >
+                <mvc:View
+                    controllerName="local.controller.Master"
+                    xmlns="sap.m"
+                    xmlns:sap.ui.core="sap.ui.core"
+		    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                    xmlns:mvc="sap.ui.core.mvc" >
+                    <Page id="page" title="Выбор категории" showFooter="true">
+                        <headerContent>
+                            <Button icon="sap-icon://cart" tooltip="Добавить в корзину" />
+                        </headerContent>
+                        <subHeader>
+                            <Toolbar id="searchBar" >
+                                <content>
+                                    <SearchField id="searchField" width="100%" search="onCategorySearch" placeholder="Поиск ..." showRefreshButton="true" />
+                                </content>
+                            </Toolbar>
+                        </subHeader>
+
+                        <content>
+                            <List id="categoryList" noDataText="Нет данных" items="{/categories}">
+                                <items>
+                                    <StandardListItem
+				        counter="{count}"
+				        title="{name}"
+				        app:id="{id}"
+				        type="Active"
+				        press="openChangeDialog" />
+                                </items>
+                            </List>
+                        </content>
+                        <footer>
+                            <Toolbar>
+                                <content>
+                                    <ToolbarSpacer />
+				    <Button press="onSortingButtonPress"
+					    icon="sap-icon://sort" />
+				    <Button press="onAddCategory"
+                                            icon="sap-icon://add" />
+                                </content>
+                            </Toolbar>
+                        </footer>
+                    </Page>
+                </mvc:View>
+            </script>
+
+            <!-- Детальная страница -->
+            <script id="view2" type="sapui5/xmlview">
+                <mvc:View
+                    controllerName="local.controller.Detail"
+                    xmlns="sap.m"
+                    xmlns:sap.ui.core="sap.ui.core"
+                    xmlns:mvc="sap.ui.core.mvc"
+                    xmlns:html="http://www.w3.org/1999/xhtml"
+		    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+                    <Page id="page" navButtonPress="handleNavButtonPress" title="{Name}" showNavButton="{device>/isPhone}">
+                        <content>
+                            <VBox id="idVbox" direction="Column" >
+                                <items>
+			            <Bar>
+                                        <contentMiddle>
+                                            <Title text="Товары" level="H1" />
+                                        </contentMiddle>
+				        <contentRight>
+                                            <Button text="Настроить колонки" icon="sap-icon://settings"  press="onChangeColumns"/>        
+                                        </contentRight>
+				    </Bar>
+		                    <html:div id="holder"> </html:div>
+                                </items>
+                            </VBox>
+                        </content>
+                        <footer>
+                            <Toolbar>
+                            </Toolbar>
+                        </footer>
+
+                    </Page>
+                </mvc:View>
+            </script>
+	    <script id="sortingPopoverFragment" type="ui5/fragment">
+	        <core:FragmentDefinition
+		    xmlns="sap.m"
+		    xmlns:core="sap.ui.core"
+		    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+		    <Popover
+		        title="Для сортировки использовать"
+		        class="sapUiContentPadding"
+		        id="sortingPopover"
+		        placement="Top"
+		        initialFocus="email">
+		        <Button text="Название" width="150px" press="changeSorting" app:sortOn="name"/>
+		        <Button text="Число" width="150px" press="changeSorting" app:sortOn="count"/>
+		    </Popover>
+	        </core:FragmentDefinition>
+	    </script>
+            <script id="dialogFragment" type="ui5/fragment">
+                <core:FragmentDefinition
+                    xmlns="sap.m"
+                    xmlns:core="sap.ui.core"
+                    xmlns:l="sap.ui.layout"
+                    xmlns:f="sap.ui.layout.form"
+		    xmlns:mvc="sap.ui.core.mvc"
+		    xmlns:html="http://www.w3.org/1999/xhtml"
+                    >
+                    <Dialog
+                        id="addCategoryDialog"
+		        ok="onAddCategorySubmit"
+		        cancel="onCloseDialog"
+                        title="Создать категорию:">
+                        <content>
+                            <f:SimpleForm class="editableForm">
+                                <f:content>
+                                    <Label text="Название" />
+                                    <Input id="newCategoryName" />
+                                    <Label text="Количество" />
+                                    <Input id="newCategoryCount" value="1" type="Number" />
+                                </f:content>
+                            </f:SimpleForm>
+			    
+		        </content>
+		        <beginButton>
+			    <Button text="Создать" press="onAddCategorySubmit"/>
+		        </beginButton>
+		        <endButton>
+			    <Button text="Отмена" press="onCloseDialog"/>
+		        </endButton>
+		    </Dialog>
+                </core:FragmentDefinition>
+            </script>
         <!-- Подключение страниц -->
         <script>
          // Controller definition 4 Matser
-sap.ui.controller('local.controller.Master', {
-  onInit: function () {
-    this.onSortingButtonPress = this.onSortingButtonPress.bind(this);
-    this.changeSorting = this.changeSorting.bind(this);
-    this.oModel = new sap.ui.model.json.JSONModel();
-    this.oModel.setData({
-      categories: [
-        {name: 'категория 1', count: 4, id: 0},
-        {name: 'категория 2', count: 2, id: 1},
-      ],
-      uId: 2,
-    });
-    this.getView().setModel(this.oModel);
-    this.categoryList = this.getView().byId('categoryList');
-  },
-  openChangeDialog: function (oEvent) {
-    var Dialog = sap.m.Dialog;
-    var Button = sap.m.Button;
-    var SimpleForm = sap.ui.layout.form.SimpleForm;
-    var Label = sap.m.Label;
-    var id = oEvent.getSource().data('id');
-    var category = this.oModel
-                       .getProperty('/categories')
-                       .find(function (x) {
-                         return x.id === id;
-                       });
-    var nameInput = new sap.m.Input({value: category.name});
-    var countInput = new sap.m.Input({value: category.count});
-    var dialog = new Dialog({
-      title: 'Изменить категорию:',
-      content: new SimpleForm({
-        content: [
-          new Label({text: 'Название'}),
-          nameInput,
-          new Label({text: 'Количество'}),
-          countInput,
-        ],
-      }),
-      beginButton: new Button({
-        text: 'Сохранить',
-        press: function () {
-          var validated = this.getCategoryFields(
-            nameInput.getValue().trim(),
-            countInput.getValue().trim()
-          );
-          if (validated) {
-            category.name = validated.name;
-            category.count = validated.count;
-            this.oModel.refresh();
-            dialog.close();
-          }
-        }.bind(this),
-      }),
-      endButton: new Button({
-        text: 'Отмена',
-        press: function () {
-          dialog.close();
-        },
-      }),
-      afterClose: function () {
-        dialog.destroy();
-      }});
-    dialog.open();
-  },
-  onCategorySearch: function (oEvent) {
-    var Filter = sap.ui.model.Filter;
-    var FilterOperator = sap.ui.model.FilterOperator;
-    // build filter array
-    var aFilter = [];
-    var sQuery = oEvent.getParameter('query').trim();
-    if (sQuery) {
-      aFilter.push(new Filter('name', FilterOperator.Contains, sQuery));
-    }
-    var oBinding = this.categoryList.getBinding('items');
-    oBinding.filter(aFilter);
-  },
-  getCategoryFields: function (name, count) {
-    var _count = parseInt(count);
-    if (name && _count) {
-      return {name: name, count: _count};
-    } else {
-      alert('Некорректные данные!');
-      return false;
-    }
-  },
-  onCloseDialog: function () {
-    this.oDialog.close();
-  },
-  onAddCategorySubmit: function () {
-    var oModel = this.oModel;
-    var count = sap.ui.getCore().byId('newCategoryCount').getValue();
-    var name = sap.ui.getCore().byId('newCategoryName').getValue();
-    count = count.replace(/^D/, '');
-    var validated = this.getCategoryFields(name, count);
-    if (validated) {
-      var id = oModel.getProperty('/uId');
-      oModel.setProperty('/uId', id + 1);
-      oModel
-        .getProperty('/categories')
-        .push({
-          name: validated.name,
-          count: validated.count,
-          id: id,
-        });
-      oModel.refresh();
-      this.oDialog.close();
-    }
-  },
-  changeSorting: function (oEvent) {
-    var sortingAttribute = oEvent.getSource().data('sortOn');
-    var oBinding = this.categoryList.getBinding('items');
-    var aSorter = [];
-    aSorter.push(new sap.ui.model.Sorter(sortingAttribute));
-    oBinding.sort(aSorter);
-    this.oModel.refresh();
-  },
-  onSortingButtonPress: function (oEvent) {
-    var oView = this.getView();
-    this.oPopOver = sap.ui.getCore().byId('sortingPopover');
-    if (!this.oPopOver) {
-      this.oPopOver = sap.ui.xmlfragment(
-        {fragmentContent: jQuery('#sortingPopoverFragment').html()},
-        this
-      );
-      oView.addDependent(this.oPopOver);
-    }
-    var oButton = oEvent.getSource();
-    jQuery.sap.delayedCall(0, this, function () {
-      this.oPopOver.openBy(oButton);
-    });
-  },
-  onAddCategory: function () {
-    var oView = this.getView();
-    this.oDialog = sap.ui.getCore().byId('addCategoryDialog');
-    if (!this.oDialog) {
-      this.oDialog = sap.ui.xmlfragment({fragmentContent: jQuery('#dialogFragment').html()}, this);
-      oView.addDependent(this.oDialog);
-    }
-    this.oDialog.open();
-  },
-  pressExample: function (oEvent) {
-    alert('Нажат элемент ' + oEvent.getSource().getTitle());
-  },
-});
+         sap.ui.controller('local.controller.Master', {
+           onInit: function () {
+             this.onSortingButtonPress = this.onSortingButtonPress.bind(this);
+             this.changeSorting = this.changeSorting.bind(this);
+             this.oModel = new sap.ui.model.json.JSONModel();
+             this.oModel.setData({
+               categories: [
+                 {name: 'категория 1', count: 4, id: 0},
+                 {name: 'категория 2', count: 2, id: 1},
+               ],
+               uId: 2,
+             });
+             this.getView().setModel(this.oModel);
+             this.categoryList = this.getView().byId('categoryList');
+           },
+           openChangeDialog: function (oEvent) {
+             var Dialog = sap.m.Dialog;
+             var Button = sap.m.Button;
+             var SimpleForm = sap.ui.layout.form.SimpleForm;
+             var Label = sap.m.Label;
+             var id = oEvent.getSource().data('id');
+             var category = this.oModel
+                                .getProperty('/categories')
+                                .find(function (x) {
+                                  return x.id === id;
+                                });
+             var nameInput = new sap.m.Input({value: category.name});
+             var countInput = new sap.m.Input({value: category.count});
+             var dialog = new Dialog({
+               title: 'Изменить категорию:',
+               content: new SimpleForm({
+                 content: [
+                   new Label({text: 'Название'}),
+                   nameInput,
+                   new Label({text: 'Количество'}),
+                   countInput,
+                 ],
+               }),
+               beginButton: new Button({
+                 text: 'Сохранить',
+                 press: function () {
+                   var validated = this.getCategoryFields(
+                     nameInput.getValue().trim(),
+                     countInput.getValue().trim()
+                   );
+                   if (validated) {
+                     category.name = validated.name;
+                     category.count = validated.count;
+                     this.oModel.refresh();
+                     dialog.close();
+                   }
+                 }.bind(this),
+               }),
+               endButton: new Button({
+                 text: 'Отмена',
+                 press: function () {
+                   dialog.close();
+                 },
+               }),
+               afterClose: function () {
+                 dialog.destroy();
+               }});
+             dialog.open();
+           },
+           onCategorySearch: function (oEvent) {
+             var Filter = sap.ui.model.Filter;
+             var FilterOperator = sap.ui.model.FilterOperator;
+             // build filter array
+             var aFilter = [];
+             var sQuery = oEvent.getParameter('query').trim();
+             if (sQuery) {
+               aFilter.push(new Filter('name', FilterOperator.Contains, sQuery));
+             }
+             var oBinding = this.categoryList.getBinding('items');
+             oBinding.filter(aFilter);
+           },
+           getCategoryFields: function (name, count) {
+             var _count = parseInt(count);
+             if (name && _count) {
+               return {name: name, count: _count};
+             } else {
+               alert('Некорректные данные!');
+               return false;
+             }
+           },
+           onCloseDialog: function () {
+             this.oDialog.close();
+           },
+           onAddCategorySubmit: function () {
+             var oModel = this.oModel;
+             var count = sap.ui.getCore().byId('newCategoryCount').getValue();
+             var name = sap.ui.getCore().byId('newCategoryName').getValue();
+             count = count.replace(/^D/, '');
+             var validated = this.getCategoryFields(name, count);
+             if (validated) {
+               var id = oModel.getProperty('/uId');
+               oModel.setProperty('/uId', id + 1);
+               oModel
+                 .getProperty('/categories')
+                 .push({
+                   name: validated.name,
+                   count: validated.count,
+                   id: id,
+                 });
+               oModel.refresh();
+               this.oDialog.close();
+             }
+           },
+           changeSorting: function (oEvent) {
+             var sortingAttribute = oEvent.getSource().data('sortOn');
+             var oBinding = this.categoryList.getBinding('items');
+             var aSorter = [];
+             aSorter.push(new sap.ui.model.Sorter(sortingAttribute));
+             oBinding.sort(aSorter);
+             this.oModel.refresh();
+           },
+           onSortingButtonPress: function (oEvent) {
+             var oView = this.getView();
+             this.oPopOver = sap.ui.getCore().byId('sortingPopover');
+             if (!this.oPopOver) {
+               this.oPopOver = sap.ui.xmlfragment(
+                 {fragmentContent: jQuery('#sortingPopoverFragment').html()},
+                 this
+               );
+               oView.addDependent(this.oPopOver);
+             }
+             var oButton = oEvent.getSource();
+             jQuery.sap.delayedCall(0, this, function () {
+               this.oPopOver.openBy(oButton);
+             });
+           },
+           onAddCategory: function () {
+             var oView = this.getView();
+             this.oDialog = sap.ui.getCore().byId('addCategoryDialog');
+             if (!this.oDialog) {
+               this.oDialog = sap.ui.xmlfragment({fragmentContent: jQuery('#dialogFragment').html()}, this);
+               oView.addDependent(this.oDialog);
+             }
+             this.oDialog.open();
+           },
+           pressExample: function (oEvent) {
+             alert('Нажат элемент ' + oEvent.getSource().getTitle());
+           },
+         });
 
-// Controller definition 4 Detail
-sap.ui.controller('local.controller.Detail', {
-  onInit: function () {
-    this.oModel = new sap.ui.model.json.JSONModel();
-    this.oModel.setData({goods: [
-      {
-        title: 'Power Projector 4713',
-        description: '1239102',
-        icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-6100.jpg',
-        price: 80,
-      },
-      {
-        title: 'Gladiator MX',
-        description: '2212-121-828',
-        icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1071.jpg',
-        price: 55,
-      },
+         // Controller definition 4 Detail
+         sap.ui.controller('local.controller.Detail', {
+           onInit: function () {
+             this.oModel = new sap.ui.model.json.JSONModel();
+             this.oModel.setData({
+               goods: [
+               {
+                 title: 'Power Projector 4713',
+                 description: '1239102',
+                 icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-6100.jpg',
+                 price: 80,
+               },
+               {
+                 title: 'Gladiator MX',
+                 description: '2212-121-828',
+                 icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1071.jpg',
+                 price: 55,
+               },
+               {
+                 title: 'Hurricane GX',
+                 description: 'K47322.1',
+                 icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1072.jpg',
+                 price: 35,
+               },
+               {
+                 title: 'Webcam',
+                 description: '22134T',
+                 icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1112.jpg',
+                 price: 23,
+               },
+             ],
+               TotalCost: 0,
+             });
+             this.getView().setModel(this.oModel);
+             this.goodsList = this.getView().byId('goodsList');
+             this.columnsSettings = {
+               title: {
+                 cellConstructor: function (text) {
+                   return new sap.m.Title({text: text});
+                 },
+                 rus: 'Название',
+                 visible: true,
+               },
+               price: {
+                 cellConstructor: function (price) {
+                   return new sap.m.ObjectNumber({
+                     number: price,
+                     unit: 'EUR',
+                   });
+                 },
+                 rus: 'Цена',
+                 visible: true,
+               },
+               description: {
+                 cellConstructor: function (text) {
+                   return new sap.m.Text({text: text});
+                 },
+                 rus: 'Описание',
+                 visible: true,
+               },
+               icon: {
+                 cellConstructor: function (source) {
+                   return new sap.m.Image({
+                     src: source,
+                     width: '40px',
+                   });
+                 },
+                 rus: 'Картинка',
+                 visible: true,
+               },
+             };
+           },
+           onAfterRendering: function () {
+             this.table = this.newTable();
+             var holder = this.getView().byId('holder');
+             this.table.setModel(this.oModel);
+             this.table.placeAt(holder.getDomRef());
+           },
+           newTable: function () {
+             var settings = this.columnsSettings;
+             var visibleColumns = Object.keys(settings)
+                                        .filter(function (column) {
+                                          return settings[column].visible;
+                                        });
+             var columns = visibleColumns.map(function (column) {
+               return new sap.m.Column({
+                 hAlign: 'Right',
+                 header: new sap.m.Label({
+                   text: settings[column].rus,
+                   design: sap.m.LabelDesign.Bold,
+                 }),
+               });
+             });
+             var oTable = new sap.m.Table({
+               mode: sap.m.ListMode.None,
+               columns: columns,
+             });
+             var cells = visibleColumns.map(function (nameStr) {
+               return settings[nameStr].cellConstructor('{' + nameStr + '}');
+             });
+             oTable.bindItems('/goods', new sap.m.ColumnListItem({
+               cells: cells,
+               vAlign: sap.ui.core.VerticalAlign.Middle,
+             }));
+             return oTable;
+           },
+           onChangeColumns: function () {
+             var Dialog = sap.m.Dialog;
+             var Button = sap.m.Button;
+             var settings = this.columnsSettings;
+             if (!this.dialog) {
+               var listItems = Object.keys(settings).map(function (x) {
+                 var column = settings[x];
+                 var row = new sap.m.StandardListItem({
+                   title: column.rus,
+                   type: sap.m.ListType.Active,
+                   selected: true,
+                   press: function (oEvent) {
+                     column.visible ^= true;
+                     var source = oEvent.getSource();
+                     source.setSelected(!source.getSelected());
+                   },
+                 });
+                 return row;
+               });
+               this.dialog = new Dialog({
+                 title: 'Показывать поля:',
+                 content: [
+                   new sap.m.List({
+                     mode: 'MultiSelect',
+                     items: listItems,
+                   }),
+                 ],
+                 beginButton: new Button({
+                   text: 'Применить',
+                   press: function () {
+                     this.table.destroy();
+                     this.table = this.newTable();
+                     this.onAfterRendering();
+                     this.dialog.close();
+                   }.bind(this),
+                 }),
+                 endButton: new Button({
+                   text: 'Отмена',
+                   press: function () {
+                     this.dialog.close();
+                   }.bind(this),
+                 }),
+               });
+             }
+             this.dialog.open();
+           },
+         });
 
-      {
-        title: 'Hurricane GX',
-        description: 'K47322.1',
-        icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1072.jpg',
-        price: 35,
-      },
-      {
-        title: 'Webcam',
-        description: '22134T',
-        icon: 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/demokit/explored/img/HT-1112.jpg',
-        price: 23,
-      },
-    ],
-                         TotalCost: 0,
-    });
-    this.getView().setModel(this.oModel);
-    this.goodsList = this.getView().byId('goodsList');
-  },
-  onItemSelect: function () {
-    var goods = this.goodsList.getSelectedItems();
-    var newCost = goods.reduce(function (a, b) {
-      return a + b.data('price');
-    }, 0);
-    this.oModel.oData.TotalCost = newCost;
-    this.oModel.refresh();
-  },
-  onItemPress: function (oEvent) {
-    var item = oEvent.getSource();
-    item.setSelected(!item.getSelected());
-    this.onItemSelect();
-  },
-  onAddToCart: function () {
-    var goods = this.goodsList.getSelectedItems();
-    var msgString = goods.reduce(function (previousValue, currentValue) {
-      return previousValue + '\r\n' + currentValue.getTitle();
-    }, 'Вы выбрали:');
-    sap.m.MessageToast.show(msgString);
-  },
-  handleIconTabBarSelect: function (oEvent) {
-    var oBinding = this.goodsList.getBinding('items');
-    var sKey = oEvent.getParameter('key');
-    var oFilter;
-    var Filter = sap.ui.model.Filter;
-    if (sKey === 'notCheap') {
-      oFilter = new Filter('price', 'BT', 41, 60);
-      oBinding.filter([oFilter]);
-    } else if (sKey === 'Expensive') {
-      oFilter = new Filter('price', 'GT', 60);
-      oBinding.filter([oFilter]);
-    } else {
-      oBinding.filter([]);
-    }
-  },
-});
+         var splitApp = new sap.m.SplitApp({
+           masterPages: [sap.ui.xmlview('myView1', {viewContent: jQuery('#view1').html()})],
+           detailPages: [sap.ui.xmlview('myView2', {viewContent: jQuery('#view2').html()})],
+         });
 
-var splitApp = new sap.m.SplitApp({
-  masterPages: [sap.ui.xmlview('myView1', {viewContent: jQuery('#view1').html()})],
-  detailPages: [sap.ui.xmlview('myView2', {viewContent: jQuery('#view2').html()})],
-});
+         var shell = sap.m.Shell({
+           showLogout: false,
+           app: splitApp,
+         });
 
-var shell = sap.m.Shell({
-  showLogout: false,
-  app: splitApp,
-});
+         // oView.setModel(new sap.ui.model.json.JSONModel("https://openui5.hana.ondemand.com/test-resources/sap/ui/demokit/explored/products.json"));
 
-// oView.setModel(new sap.ui.model.json.JSONModel("https://openui5.hana.ondemand.com/test-resources/sap/ui/demokit/explored/products.json"));
-
-shell.placeAt('content');
+         shell.placeAt('content');
         </script>
 
     </head>
 
     <body class="sapUiBody" role="application">
+        <div id="table"></div>
         <div id="content"></div>
     </body>
 </html>
